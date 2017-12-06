@@ -12,22 +12,37 @@ export default class SearchPage extends Component {
     query: ``
   }
 
-  updateQuery = (event) => {
-    const value = event.target.value
-    this.setState({query: value.trim()})
+  mergeArr = (arr, Arr) => {
+    return arr.map((item)=> {
+      Arr.forEach((Item)=>{
+        if(Item.id === item.id){
+          item.shelf = Item.shelf
+          return
+        }
+      })
+      return item
+    })
   }
 
-  handleEnterPress = (event) => {
-    if (event.key === 'Enter') {
-      const value = this.state.query
-      if (value.length !== 0) {
-        BooksAPI.search(value, 10).then((books) => {
+  updateQuery = (event) => {
+    const value = event.target.value.trim()
+    this.setState({query: value.trim()})
+    this.searchData(value)
+  }
+
+  searchData = (value) => {
+    if (value.length !== 0 ) {
+      BooksAPI.search(value, 10).then((books) =>{
+        if(books.length>0){
           books = books.filter((book)=>book.imageLinks)
+          books = this.mergeArr(books, this.props.myBooks)
           this.setState({books})
-        })
-      } else {
-        this.setState({books: [], query: ``})
-      }
+        } else {
+          this.setState({books: []})
+        }
+      })
+    } else {
+      this.setState({books: [], query: ``})
     }
   }
 
