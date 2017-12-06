@@ -16,15 +16,11 @@ export default class BooksApp extends Component {
   }
 
   fetchMyBooks = () => {
-    BooksAPI.getAll().then((books) => this.setState({
-      books
-    }))
+    BooksAPI.getAll().then((books) => this.setState({books}))
   }
 
   changeShelf = (id,shelf) => {
-    BooksAPI.update({
-      id
-    }, shelf).then(() => {
+    BooksAPI.update({ id }, shelf).then(() => {
       this.fetchMyBooks()
     })
   }
