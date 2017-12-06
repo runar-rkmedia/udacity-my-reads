@@ -1,41 +1,64 @@
-import React, {Component} from 'react'
-import {Route} from 'react-router-dom'
+import React, { Component } from 'react'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 
 import ListBooks from './components/ListBooks'
 import SearchPage from './components/SearchPage'
 
-class BooksApp extends Component {
+export default class BooksApp extends Component {
   state = {
     books: []
   }
 
-  shelfs = [
-
-    {
-      name: 'currentlyReading',
-      heading: 'Currently Reading'
-    }, {
-      name: 'wantToRead',
-      heading: "Want to Read"
-    }, {
-      name: 'read',
-      heading: 'Read'
-    }
-  ]
-
   componentDidMount() {
-    BooksAPI.getAll().then((books) => this.setState({books}))
+    this.fetchMyBooks()
+  }
+
+  fetchMyBooks = () => {
+    BooksAPI.getAll().then((books) => this.setState({
+      books
+    }))
+  }
+
+  changeShelf = (id,shelf) => {
+    BooksAPI.update({
+      id
+    }, shelf).then(() => {
+      this.fetchMyBooks()
+    })
   }
 
   render() {
-    return (<div className="app">
-      <Route exact="exact" path="/search" render={() => (<SearchPage/>)}/>
+    return (
+      <div className="app">
+          <Route
+            exact
+            path="/search"
+            render={({history}) => (
+              <SearchPage
+                myBooks={this.state.books}
+                onShelfChange={(id,shelf)=>{
+                  this.changeShelf(id,shelf)
+                  history.push('/')
+                }}
+              />
+            )}
+          />
 
-      <Route exact="exact" path="/" render={() => (<ListBooks shelfs={this.shelfs} books={this.state.books}/>)}/>
-    </div>)
+          <Route
+            exact
+            path="/"
+            render={()=>(
+              <ListBooks
+                books={this.state.books}
+                onShelfChange={(id,shelf)=>{
+                  this.changeShelf(id,shelf)
+                }}
+              />
+            )}
+          />
+      </div>
+    )
   }
 }
-
-export default BooksApp
