@@ -25,9 +25,8 @@ export default class BookShelf extends Component {
                 author={book.authors}
                 key={``.concat(book.id,index)}
                 shelf={book.shelf}
-                onShelfChange={(shelf)=>{
-                this.props.onShelfChange(book.id,shelf)
-                }}
+                onShelfChange={(shelf)=>{this.props.onShelfChange(book.id,shelf)}
+              }
               />
             ))}
           </ol>
