@@ -42,10 +42,10 @@ export default class ListBooks extends Component {
           </div>
           <div className="list-books-content">
             <div>
-              { shelfs.map((shelf,index)=> (
+              { shelfs.map((shelf)=> (
                 <BookShelf
                   title={shelf.heading}
-                  key={index}
+                  key={shelf.id}
                   books={books.filter((book) => book.shelf === shelf.name)}
                   onShelfChange={(id,shelf)=>{
                     this.props.onShelfChange(id,shelf)

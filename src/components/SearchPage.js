@@ -25,8 +25,8 @@ export default class SearchPage extends Component {
   }
 
   updateQuery = (event) => {
-    const value = event.target.value.trim()
-    this.setState({query: value.trim()})
+    const value = event.target.value
+    this.setState({query: value})
     this.searchData(value)
   }
 
@@ -38,7 +38,7 @@ export default class SearchPage extends Component {
           books = this.mergeArr(books, this.props.myBooks)
           this.setState({books})
         } else {
-          this.setState({books: []})
+          this.setState({books: []}) 
         }
       })
     } else {

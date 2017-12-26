@@ -7,7 +7,7 @@ export default class Book extends Component {
     imageURL: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     author: PropTypes.array,
-    shelf: PropTypes.string.isRequired,
+    shelf: PropTypes.string,
     onShelfChange: PropTypes.func.isRequired
   }
 
@@ -29,7 +29,7 @@ export default class Book extends Component {
             <div className="book-shelf-changer">
               <select onChange={this.changeShelf} value={this.props.shelf}>
                 <option value="none" disabled>Move to...</option>
-                <option value="currentlyReading">Currently Reading</option>
+                <option value={this.props.shelf || 'none'}>Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
                 <option value="read">Read</option>
                 <option value="none">None</option>

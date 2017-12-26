@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 
@@ -19,15 +19,16 @@ export default class BooksApp extends Component {
     BooksAPI.getAll().then((books) => this.setState({books}))
   }
 
-  changeShelf = (id,shelf) => {
-    BooksAPI.update({ id }, shelf).then(() => {
-      this.fetchMyBooks()
+  changeShelf = (book,shelf) => {
+    BooksAPI.update( book, shelf).then(() => {
+      this.setState(state => ({books: state.books.filter(b=> b.id !== book.id).concat([book])
+      }))
     })
   }
 
   render() {
     return (
-      <div className="app">
+      <Switch>
           <Route
             exact
             path="/search"
@@ -54,7 +55,8 @@ export default class BooksApp extends Component {
               />
             )}
           />
-      </div>
+
+      </Switch>
     )
   }
 }
