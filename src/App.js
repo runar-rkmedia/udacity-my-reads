@@ -19,12 +19,25 @@ export default class BooksApp extends Component {
     BooksAPI.getAll().then((books) => this.setState({books}))
   }
 
-  changeShelf = (book,shelf) => {
-    BooksAPI.update( book, shelf).then(() => {
-      this.setState(state => ({books: state.books.filter(b=> b.id !== book.id).concat([book])
-      }))
+  changeShelf = (bookId, shelf) => {
+      console.log(bookId, shelf)
+      BooksAPI.update(bookId, shelf).then(() => {
+        this.setState(state => {
+          console.log(state)
+          let books = state.books.slice()
+          let bookToChange = books.find(book => book.id === bookId)
+          if (bookToChange) {
+            bookToChange.shelf = shelf
+          }
+          return (
+            this.setState(
+              {books : this.state.books}
+            )
+          )
+      })
     })
   }
+
 
   render() {
     return (
