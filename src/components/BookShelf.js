@@ -12,7 +12,7 @@ export default class BookShelf extends Component {
   }
 
   render(){
-    const books = this.props.books
+    const {books, onShelfChange} = this.props
     return(
       <div className="bookshelf">
         <h2 className="bookshelf-title">{this.props.title}</h2>
@@ -20,13 +20,9 @@ export default class BookShelf extends Component {
           <ol className="books-grid">
             {books.map((book)=>(
               <Book
-                imageURL={book.imageLinks}
-                title={book.title}
-                author={book.authors}
-                key={``.concat(book.id)}
-                shelf={book.shelf}
-                onShelfChange={(shelf)=>{this.props.onShelfChange(book.id,shelf)}
-              }
+                book={book}
+                key={book.id}
+                onShelfChange={onShelfChange}
               />
             ))}
           </ol>

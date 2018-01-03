@@ -4,19 +4,14 @@ import { PropTypes } from 'prop-types'
 
 export default class Book extends Component {
   static propTypes = {
-    imageURL: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
-    author: PropTypes.array,
-    shelf: PropTypes.string,
+    book: PropTypes.object.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
 
-  changeShelf = (e) => {
-    this.props.onShelfChange(e.target.value)
-  }
-
   render(){
-    const imageURL = this.props.imageURL.thumbnail || this.props.imageURL.smallThumbnail
+    const {book, onShelfChange} = this.props
+    const {shelf, title, author, imageLinks} = book
+    const imageURL = imageLinks.thumbnail || imageLinks.smallThumbnail
     return (
       <li>
         <div className="book">
@@ -27,7 +22,7 @@ export default class Book extends Component {
                 backgroundImage: `url("${imageURL}")`}}>
             </div>
             <div className="book-shelf-changer">
-              <select onChange={this.changeShelf} value={this.props.shelf || 'none'}>
+              <select onChange={(e) => onShelfChange(book, e.target.value)} value={shelf || 'none'}>
                 <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
@@ -36,8 +31,8 @@ export default class Book extends Component {
               </select>
             </div>
           </div>
-          <div className="book-title">{`${this.props.title}`}</div>
-          {this.props.author && this.props.author.map((author,index)=>(
+          <div className="book-title">{`${title}`}</div>
+          {author && author.map((author,index)=>(
             <div className="book-authors" key={index}>
               {`${author}`}
             </div>

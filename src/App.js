@@ -8,7 +8,7 @@ import SearchPage from './components/SearchPage'
 
 export default class BooksApp extends Component {
   state = {
-    books: []
+    books: {}
   }
 
   componentDidMount() {
@@ -16,30 +16,33 @@ export default class BooksApp extends Component {
   }
 
   fetchMyBooks = () => {
-    BooksAPI.getAll().then((books) => this.setState({books}))
+    BooksAPI.getAll().then((books) => {
+      const booksHash = books.reduce((prev, book) => {
+        prev[book.id] = book
+        return prev
+      }, {})
+      this.setState({
+        books: booksHash
+      })
+    })
   }
 
-  changeShelf = (bookId, shelf) => {
-      console.log(bookId, shelf)
-      BooksAPI.update(bookId, shelf).then(() => {
-        this.setState(state => {
-          console.log(state)
-          let books = state.books.slice()
-          let bookToChange = books.find(book => book.id === bookId)
-          if (bookToChange) {
-            bookToChange.shelf = shelf
-          }
-          return (
-            this.setState(
-              {books : this.state.books}
-            )
-          )
+  changeShelf = (book, shelf) => {
+    BooksAPI.update(book.id, shelf).then(() => {
+      book.shelf = shelf
+      this.setState(state => {
+        const newState = { ...state
+        }
+        newState.books[book.id] = book
+        return newState
       })
     })
   }
 
 
   render() {
+    const { books } = this.state
+    const booksArray = Object.keys(books).map(key => books[key])
     return (
       <Switch>
           <Route
@@ -47,9 +50,9 @@ export default class BooksApp extends Component {
             path="/search"
             render={({history}) => (
               <SearchPage
-                myBooks={this.state.books}
-                onShelfChange={(id,shelf)=>{
-                  this.changeShelf(id,shelf)
+                myBooks={booksArray}
+                onShelfChange={(book,shelf)=>{
+                  this.changeShelf(book,shelf)
                   history.push('/')
                 }}
               />
@@ -61,9 +64,9 @@ export default class BooksApp extends Component {
             path="/"
             render={()=>(
               <ListBooks
-                books={this.state.books}
-                onShelfChange={(id,shelf)=>{
-                  this.changeShelf(id,shelf)
+                books={booksArray}
+                onShelfChange={(book,shelf)=>{
+                  this.changeShelf(book,shelf)
                 }}
               />
             )}
