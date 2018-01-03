@@ -45,7 +45,7 @@ export default class ListBooks extends Component {
               { shelfs.map((shelf)=> (
                 <BookShelf
                   title={shelf.heading}
-                  key={shelf.id}
+                  key={shelf.name}
                   books={books.filter((book) => book.shelf === shelf.name)}
                   onShelfChange={(id,shelf)=>{
                     this.props.onShelfChange(id,shelf)
